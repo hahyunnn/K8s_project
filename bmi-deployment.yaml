@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bmi-app-deployment
+  labels:
+    app: bmi-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bmi-app
+  template:
+    metadata:
+      labels:
+        app: bmi-app
+    spec:
+      containers:
+      - name: bmi-app
+        image: hahyunnn/bmi-app:latest  # ← Docker Hub에 올린 이미지 사용
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: log-volume
+          mountPath: /logs
+      volumes:
+      - name: log-volume
+        persistentVolumeClaim:
+          claimName: bmi-log-pvc
+

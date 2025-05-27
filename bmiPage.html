@@ -1,0 +1,117 @@
+<html>
+<head>
+  <title>BMI 계산기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+      font-family: 'Nanum Gothic', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .bmi-container {
+      background: #fff;
+      padding: 2.5rem 2rem 2rem 2rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 320px;
+      animation: fadeIn 1s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      color: #3a3a3a;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+    label {
+      font-size: 1.1rem;
+      color: #444;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    input[type="text"] {
+      width: 180px;
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 1rem;
+      border: 1.5px solid #b5c6e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.2s;
+      outline: none;
+    }
+    input[type="text"]:focus {
+      border: 1.5px solid #6a9cf7;
+    }
+    #bmiBtn {
+      background: linear-gradient(90deg, #6a9cf7 0%, #4f8ef7 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7rem 2.2rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      box-shadow: 0 2px 8px rgba(80, 120, 255, 0.08);
+      transition: background 0.2s, transform 0.1s;
+    }
+    #bmiBtn:hover {
+      background: linear-gradient(90deg, #4f8ef7 0%, #6a9cf7 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    #result {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      color: #2d5fa4;
+      min-height: 1.5em;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      text-align: center;
+      transition: color 0.2s;
+    }
+  </style>
+</head>
+<body>
+  <div class="bmi-container">
+    <h1>BMI 계산기</h1>
+    <label for="height">키(cm)</label>
+    <input type="text" id="height" placeholder="예: 170">
+    <label for="weight">체중(kg)</label>
+    <input type="text" id="weight" placeholder="예: 65">
+    <input type="button" id="bmiBtn" value="BMI 계산">
+    <p id="result"></p>
+  </div>
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  <script>
+    $("#bmiBtn").click(function() {
+      const height = $("#height").val();
+      const weight = $("#weight").val();
+
+      if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+        $("#result").css('color', '#e74c3c').text("다시 입력하세요.");
+        return;
+      }
+
+      $.ajax({
+        url: "/bmi",
+        data: { height, weight },
+        success: function(data) {
+          const bmi = Math.round(data.bmi * 10) / 10;
+          $("#result").css('color', '#2d5fa4').text(`BMI: ${bmi} (${data.category})`);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
